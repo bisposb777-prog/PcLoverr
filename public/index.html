@@ -1,1 +1,424 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PC Loverr · Comparador de Preços</title>
+<style>
+:root{--bg:#f1f3f7;--bg2:#e6e9f0;--card:#fff;--tx:#1b2233;--mut:#667089;--bd:#d8dce6;--ac:#2f6fed;--ac2:#14a3a3;--ok:#1f9d63;--warn:#d9822b}
+:root[data-theme="dark"]{--bg:#10141c;--bg2:#171c27;--card:#1c2230;--tx:#e8ecf4;--mut:#8d97ad;--bd:#2b3345;--ac:#5b8cff;--ac2:#35c4c0;--ok:#43c985;--warn:#f0a050}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,var(--bg2),var(--bg) 280px) var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh}
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 48px}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:22px}
+.logo{display:flex;align-items:center;gap:12px}
+.logo i{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-style:normal;font-size:21px}
+h1{font-size:20px;margin:0}.sub{color:var(--mut);font-size:13px}
+.tbtn{background:var(--card);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14px}
+.grid{display:grid;grid-template-columns:1.5fr 1fr;gap:18px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);margin:0 0 12px;display:flex;align-items:center;gap:8px}
+.card h2:before{content:"";width:4px;height:14px;border-radius:2px;background:linear-gradient(var(--ac),var(--ac2))}
+.sr{display:flex;gap:8px}
+input[type=text]{flex:1;min-width:0;background:var(--bg);border:1px solid var(--bd);color:var(--tx);border-radius:10px;padding:12px 14px;font-size:15px;outline:none}
+input[type=text]:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(47,111,237,.2)}
+.btn{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0;border-radius:10px;padding:0 18px;font-weight:600;cursor:pointer;font-size:15px;min-height:44px}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.sec{background:var(--bg);color:var(--tx);border:1px solid var(--bd);font-weight:500;padding:8px 14px;min-height:0}
+.actions{margin-top:12px;display:flex;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:12px;border:1px solid var(--bd);background:var(--bg);color:var(--mut);border-radius:20px;padding:4px 10px;cursor:pointer}
+.chip:hover{color:var(--tx);border-color:var(--ac)}
+.hint{color:var(--mut);font-size:12px;margin-top:10px}
+.res{margin-top:16px}
+.part{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.tag{display:inline-block;font-size:11px;font-weight:600;color:var(--ac);background:rgba(47,111,237,.14);border-radius:6px;padding:2px 8px;margin-bottom:4px}
+.pn{font-size:17px;font-weight:650}.spec{color:var(--mut);font-size:13px}
+.avg{text-align:right}.avg b{display:block;font-size:26px;color:var(--ac2)}.avg span{font-size:12px;color:var(--mut)}
+table{width:100%;border-collapse:collapse;margin-top:14px;font-size:14px}
+td,th{padding:9px 6px;border-bottom:1px solid var(--bd);text-align:left}
+th{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px}
+td:last-child,th:last-child{text-align:right}
+.best{color:var(--ok);font-weight:650}.hi{color:var(--warn)}
+.rng{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--mut)}
+.err{color:var(--warn)}
+.sk{height:14px;border-radius:6px;background:var(--bg);margin:10px 0;animation:p 1.2s infinite}
+@keyframes p{50%{opacity:.4}}
+.item{display:flex;justify-content:space-between;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd);align-items:center}
+.item small{color:var(--mut);display:block}
+.x{background:none;border:0;color:var(--mut);cursor:pointer;font-size:18px;padding:4px 8px}.x:hover{color:var(--warn)}
+.tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:14px;border-top:2px solid var(--bd)}
+.tot b{font-size:26px}
+.empty{color:var(--mut);text-align:center;padding:18px 0}
+.ft{margin-top:20px;color:var(--mut);font-size:12px;text-align:center}
 
+.sec-t{font-size:15px;margin:6px 0 12px;color:var(--tx)}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:26px}
+@media(max-width:900px){.tiers{grid-template-columns:1fr}}
+.tier{display:flex;flex-direction:column}
+.tier:nth-child(3){border-color:var(--ac)}
+.tier-h{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+.ti{width:40px;height:40px;border-radius:10px;background:var(--bg);display:grid;place-items:center;font-size:20px}
+.pl{list-style:none;margin:8px 0;padding:0;font-size:13px}
+.pl li{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--bd)}
+.pl small{display:block;color:var(--mut);font-size:11px}
+.up{background:var(--bg);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--mut);margin-top:6px}
+.up b{color:var(--ok);font-size:12px}.up ul{margin:6px 0 0;padding-left:16px}
+.tier-f{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-top:auto;padding-top:14px}
+.tt{display:block;font-size:22px;color:var(--ac2)}
+
+.hb{display:flex;gap:8px}.tbtn.pri{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border:0;font-weight:600}
+.guide{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px}
+@media(max-width:900px){.guide{grid-template-columns:repeat(2,1fr)}}@media(max-width:520px){.guide{grid-template-columns:1fr}}
+.gd{display:flex;gap:12px;padding:14px}.gi{font-size:26px}.gr{color:var(--ac2);font-size:12px;font-weight:600;margin-bottom:4px}
+.what{margin-top:12px;background:var(--bg);border-left:3px solid var(--ac2);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--mut)}
+.what b{color:var(--tx)}
+.tour{position:fixed;inset:0;background:rgba(8,12,20,.7);display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.tour.on{display:flex}
+.tbox{position:relative;background:var(--card);border:1px solid var(--bd);border-radius:16px;width:100%;max-width:560px;padding:28px 24px 20px}
+.tclose{position:absolute;top:8px;right:12px;background:none;border:0;color:var(--mut);font-size:26px;cursor:pointer}
+#tslide{min-height:230px;text-align:center;display:flex;flex-direction:column;justify-content:center;align-items:center}
+#tslide iframe{width:100%;aspect-ratio:16/9;border:0;border-radius:10px}
+.te{font-size:64px;line-height:1;margin-bottom:10px}#tslide h3{margin:0 0 8px;font-size:22px}#tslide p{margin:0;color:var(--mut);font-size:16px;max-width:440px}
+.tprog{height:4px;background:var(--bg);border-radius:2px;overflow:hidden;margin:18px 0 12px}.tprog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.tc{display:flex;align-items:center;justify-content:center;gap:8px}
+
+.pick{background:var(--bg);border-left:3px solid var(--ok);border-radius:8px;padding:10px 12px;font-size:13px;margin-bottom:6px}
+.pick b{color:var(--ok)}.rl{display:block;color:var(--mut);font-size:11px;font-weight:400}
+.cpf{display:flex;gap:6px;flex-wrap:wrap}.cpf input,.cpf select{background:var(--bg);border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:8px;font-size:13px;min-width:0}
+.cpf #cpc{flex:1;min-width:70px}.cpf #cpv{width:70px}
+.cpi{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-top:6px;color:var(--mut)}
+.hint a{color:var(--ac)}code{background:var(--bg);padding:1px 6px;border-radius:4px}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.tabs button{background:var(--card);border:1px solid var(--bd);color:var(--mut);border-radius:20px;padding:6px 14px;cursor:pointer;font-size:13px}
+.tabs button.on{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-color:transparent}
+.tier:nth-child(3n){border-color:var(--bd)}
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:14px}@media(max-width:620px){.sum{grid-template-columns:repeat(2,1fr)}}
+.sum div{background:var(--bg);border-radius:10px;padding:10px 12px}.sum span{display:block;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.8px}.sum b{font-size:20px;color:var(--ac2)}
+.tw{overflow-x:auto}.st{min-width:560px}.st td:last-child,.st th:last-child{text-align:right}
+.ck{margin-top:14px;font-size:13px;display:grid;gap:6px}.ck .warn{color:var(--warn)}.ck .ok{color:var(--mut)}
+.legend{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 20px;font-size:13px;color:var(--mut)}@media(max-width:620px){.legend{grid-template-columns:1fr}}
+.legend b{display:block;color:var(--tx)}
+
+.banner{border-radius:10px;padding:10px 14px;font-size:13px;margin-bottom:16px;border:1px solid var(--bd)}
+.okb{background:var(--card);color:var(--mut)}.warnb{background:var(--card);border-color:var(--warn);color:var(--warn)}
+.meta{font-size:13px;color:var(--mut);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.chip.bad{color:var(--warn);border-color:var(--warn);cursor:default}.chip{cursor:default}
+.prod{border-top:1px solid var(--bd);margin-top:14px;padding-top:14px}
+.tag.t2{color:var(--ac2);background:rgba(20,163,163,.14)}
+.av-ok{color:var(--ok)}.av-warn{color:var(--warn)}.av-mut{color:var(--mut)}
+a.lk{color:var(--ac);text-decoration:none;font-weight:600;white-space:nowrap}
+#prog{font-size:12px;color:var(--mut);margin-top:8px}
+.pn small,.rl{display:block;color:var(--mut);font-size:11px;font-weight:400}
+.item a{color:var(--ac);font-size:12px}
+.pend{color:var(--mut);font-size:12px}
+
+</style></head><body>
+<div class="wrap">
+<header><div class="logo"><i>🖥️</i><div><h1>PC Loverr · Comparador de Preços</h1><div class="sub">Preços e links reais das lojas, com data da última consulta</div></div></div>
+<div class="hb"><button class="tbtn pri" id="tutor">▶ Como funciona</button><button class="tbtn" id="theme" title="Alternar tema">🌓</button></div></header>
+<div class="banner" id="banner">Verificando o servidor…</div>
+<h3 class="sec-t">Pesquisar peça e comparar lojas</h3>
+<div class="grid">
+<section class="card"><h2>Pesquisar peça</h2>
+<div class="sr"><input type="text" id="q" placeholder="Ex.: ASUS TUF Gaming B550M-PLUS, RTX 4060, Ryzen 5 5600..." autocomplete="off"><button class="btn" id="go">Pesquisar</button></div>
+<div class="hint">Os preços vêm das fontes consultadas pelo servidor, no momento da busca. Nada aqui é inventado: se não houver resultado, o site avisa.</div>
+<div class="res" id="res"></div></section>
+<aside class="card"><h2>Minha montagem</h2><div id="list"></div>
+<div class="tot"><span class="sub">Total (menor preço de cada peça)</span><b id="tot">R$ 0,00</b></div><div class="pend" id="pend"></div>
+<div class="actions"><button class="btn sec" id="fetch">Buscar preços</button><button class="btn sec" id="refreshall">↻ Atualizar tudo</button><button class="btn sec" id="clr">Limpar</button></div>
+<div id="prog"></div><div id="where"></div></aside></div>
+<h3 class="sec-t" style="margin-top:26px">Montagens prontas (só a lista de peças; os preços são buscados na hora)</h3>
+<div class="tabs" id="tabs"><button data-l="todos" class="on">Todas</button><button data-l="basico">Básico</button><button data-l="medio">Intermediário</button><button data-l="gamer">Gamer</button></div>
+<div class="tiers" id="tiers"></div>
+<h3 class="sec-t">Entenda o que cada peça faz</h3><div class="guide" id="guide"></div>
+<h3 class="sec-t" style="margin-top:26px">Especificações da sua montagem</h3><section class="card"><div id="specbody"></div></section>
+<div class="ft">Preços e disponibilidade pertencem às lojas e podem mudar a qualquer momento. Confirme na página da loja antes de comprar.</div>
+</div>
+<div class="tour" id="tour"><div class="tbox"><button class="tclose" id="tx" aria-label="Fechar">×</button><div id="tslide"></div><div id="tctl"><div class="tprog"><i id="tbar"></i></div><div class="tc"><button class="tbtn" id="tprev">◀</button><button class="tbtn" id="tpp">⏸</button><button class="tbtn" id="tnext">▶</button><span class="sub" id="tcount"></span></div></div></div></div>
+<script>
+const VIDEO_URL = "";
+const CATALOG = [
+  ["NVIDIA GeForce RTX 4060 8GB","Placa de vídeo","8GB GDDR6 · DLSS 3"],
+  ["NVIDIA GeForce RTX 4070 Super 12GB","Placa de vídeo","12GB GDDR6X · DLSS 3"],
+  ["AMD Radeon RX 7600 8GB","Placa de vídeo","8GB GDDR6 · RDNA 3"],
+  ["AMD Ryzen 5 5600","Processador","6 núcleos / 12 threads · AM4"],
+  ["AMD Ryzen 7 5700X","Processador","8 núcleos / 16 threads · AM4"],
+  ["AMD Ryzen 5 7600","Processador","6 núcleos / 12 threads · AM5"],
+  ["Intel Core i5 12400F","Processador","6 núcleos / 12 threads · LGA1700"],
+  ["Intel Core i7 12700K","Processador","12 núcleos / 20 threads · LGA1700"],
+  ["SSD NVMe 1TB Kingston NV2","SSD/HD","PCIe 4.0 · até 3500MB/s"],
+  ["SSD NVMe 500GB WD Blue SN570","SSD/HD","PCIe 3.0 · até 3500MB/s"],
+  ["HD 2TB Seagate Barracuda","SSD/HD","7200 RPM · SATA"],
+  ["Memória DDR4 16GB 3200MHz (2x8GB)","Memória RAM","CL16 · Dual Channel"],
+  ["Memória DDR5 16GB 5600MHz","Memória RAM","CL36 · 1x16GB"],
+  ["Fonte 650W 80 Plus Bronze","Fonte","ATX · 80 Plus Bronze"],
+  ["Fonte 750W 80 Plus Gold","Fonte","ATX · modular · 80 Plus Gold"],
+  ["Placa-mãe B550M","Placa-mãe","Socket AM4 · DDR4 · mATX"],
+  ["Placa-mãe B660M","Placa-mãe","LGA1700 · DDR4 · mATX"],
+  ["Gabinete Gamer Mid Tower","Gabinete","ATX · painel de vidro"],
+  ["Cooler Air 120mm","Cooler","Torre · 4 heatpipes"],
+  ["AMD Ryzen 7 7700","Processador","8 núcleos / 16 threads · AM5"],
+  ["AMD Ryzen 7 7800X3D","Processador","8 núcleos · 3D V-Cache · AM5"],
+  ["Placa-mãe B650M","Placa-mãe","Socket AM5 · DDR5 · mATX · PCIe 5.0"],
+  ["Placa-mãe B650 Gamer WiFi","Placa-mãe","AM5 · DDR5 · ATX · WiFi 6 · PCIe 5.0"],
+  ["Memória DDR5 32GB 6000MHz (2x16GB)","Memória RAM","CL30 · Dual Channel · EXPO"],
+  ["SSD NVMe 2TB PCIe 4.0","SSD/HD","até 7000MB/s"],
+  ["Fonte 850W 80 Plus Gold","Fonte","ATX 3.0 · modular · 80 Plus Gold"],
+  ["Water Cooler 240mm","Cooler","AIO 240mm · ARGB"],
+  ["Gabinete Airflow Mid Tower","Gabinete","ATX · tela mesh · 3 fans"],
+  ["AMD Radeon RX 6600 8GB","Placa de vídeo","8GB GDDR6 · Full HD"],
+  ["NVIDIA GeForce RTX 4060 Ti 8GB","Placa de vídeo","8GB GDDR6 · DLSS 3 · Full HD/1440p"],
+  ["NVIDIA GeForce RTX 4080 Super 16GB","Placa de vídeo","16GB GDDR6X · DLSS 3 · 4K"],
+  ["AMD Ryzen 9 7950X3D","Processador","16 núcleos / 32 threads · 3D V-Cache · AM5"],
+  ["Memória DDR5 64GB 6000MHz (2x32GB)","Memória RAM","CL30 · Dual Channel · EXPO"],
+  ["Fonte 1000W 80 Plus Gold","Fonte","ATX 3.0 · modular · 80 Plus Gold"],
+  ["Water Cooler 360mm","Cooler","AIO 360mm · ARGB"],
+  ["ASUS TUF Gaming B550M-PLUS","Placa-mãe","Socket AM4 · DDR4 · mATX · PCIe 4.0"],
+  ["Gigabyte B550M DS3H","Placa-mãe","Socket AM4 · DDR4 · mATX · PCIe 4.0"],
+  ["MSI B450M-A PRO MAX II","Placa-mãe","Socket AM4 · DDR4 · mATX"],
+  ["ASUS Prime B650M-A WiFi","Placa-mãe","Socket AM5 · DDR5 · mATX · WiFi"],
+  ["Gigabyte B650 AORUS Elite AX","Placa-mãe","Socket AM5 · DDR5 · ATX · WiFi 6E · PCIe 5.0"],
+  ["MSI PRO B760M-P DDR4","Placa-mãe","LGA1700 · DDR4 · mATX"],
+  ["AMD Ryzen 5 5600X","Processador","6 núcleos / 12 threads · AM4"],
+  ["AMD Ryzen 5 5600GT","Processador","6 núcleos / 12 threads · vídeo integrado · AM4"],
+  ["AMD Ryzen 7 5800X3D","Processador","8 núcleos · 3D V-Cache · AM4"],
+  ["AMD Ryzen 5 7600X","Processador","6 núcleos / 12 threads · AM5"],
+  ["AMD Ryzen 9 7900X","Processador","12 núcleos / 24 threads · AM5"],
+  ["Intel Core i3 12100F","Processador","4 núcleos / 8 threads · LGA1700"],
+  ["Intel Core i5 13400F","Processador","10 núcleos / 16 threads · LGA1700"],
+  ["Intel Core i7 13700K","Processador","16 núcleos / 24 threads · LGA1700"],
+  ["ASUS Dual GeForce RTX 4060 8GB","Placa de vídeo","8GB GDDR6 · DLSS 3 · Full HD"],
+  ["Gigabyte GeForce RTX 4060 Ti Gaming OC 8GB","Placa de vídeo","8GB GDDR6 · DLSS 3 · 1440p"],
+  ["MSI GeForce RTX 4070 Ventus 2X 12GB","Placa de vídeo","12GB GDDR6X · DLSS 3 · 1440p"],
+  ["XFX Radeon RX 7800 XT 16GB","Placa de vídeo","16GB GDDR6 · RDNA 3 · 1440p"],
+  ["Sapphire Pulse Radeon RX 7600 8GB","Placa de vídeo","8GB GDDR6 · RDNA 3 · Full HD"],
+  ["NVIDIA GeForce GTX 1650 4GB","Placa de vídeo","4GB GDDR6 · Full HD básico"],
+  ["Kingston Fury Beast DDR4 16GB 3200MHz","Memória RAM","CL16 · 1x16GB"],
+  ["XPG Spectrix DDR4 8GB 3200MHz","Memória RAM","CL16 · 1x8GB"],
+  ["Kingston Fury Beast DDR5 16GB 5600MHz","Memória RAM","CL40 · 1x16GB"],
+  ["Corsair Vengeance DDR5 32GB 6000MHz (2x16GB)","Memória RAM","CL30 · Dual Channel · EXPO"],
+  ["WD Black SN850X 1TB NVMe","SSD/HD","PCIe 4.0 · até 7300MB/s"],
+  ["Samsung 980 Pro 1TB NVMe","SSD/HD","PCIe 4.0 · até 7000MB/s"],
+  ["Crucial P3 Plus 1TB NVMe","SSD/HD","PCIe 4.0 · até 5000MB/s"],
+  ["Kingston A400 480GB SATA","SSD/HD","SATA · até 500MB/s"],
+  ["Seagate Barracuda 1TB HD","SSD/HD","7200 RPM · SATA"],
+  ["Corsair CV650 650W 80 Plus Bronze","Fonte","ATX · 80 Plus Bronze"],
+  ["Cooler Master MWE 550W 80 Plus Bronze","Fonte","ATX · 80 Plus Bronze"],
+  ["Corsair RM750e 750W 80 Plus Gold","Fonte","ATX 3.0 · modular · 80 Plus Gold"],
+  ["Corsair RM850e 850W 80 Plus Gold","Fonte","ATX 3.0 · modular · 80 Plus Gold"],
+  ["DeepCool AK400 Cooler","Cooler","Torre · 4 heatpipes"],
+  ["Cooler Master Hyper 212 Cooler","Cooler","Torre · 4 heatpipes"],
+  ["Corsair iCUE H100i 240mm Water Cooler","Cooler","AIO 240mm · RGB"],
+  ["NZXT H510 Gabinete","Gabinete","ATX · vidro temperado"],
+  ["Cooler Master MasterBox MB520 Gabinete","Gabinete","ATX · 3 fans RGB"],
+  ["Redragon Wheeljack Gabinete","Gabinete","ATX · vidro temperado"]
+];
+
+/* Montagens sugeridas: todas em AM5 + DDR5, então aceitam upgrade de CPU, RAM e placa de vídeo */
+const TIERS=[
+ {lv:"basico",icon:"💼",name:"Básico Escritório",tag:"Estudo, trabalho e internet",desc:"Vídeo integrado no processador, sem placa de vídeo. Silencioso, barato e pronto para receber uma GPU depois.",
+  up:["Plataforma AM5: aceita futuros Ryzen","DDR5 com 2 slots livres","Fonte comporta uma placa de vídeo básica"],
+  parts:["AMD Ryzen 5 7600","Placa-mãe B650M","Memória DDR5 16GB 5600MHz","SSD NVMe 500GB WD Blue SN570","Fonte 650W 80 Plus Bronze","Gabinete Gamer Mid Tower"]},
+ {lv:"basico",icon:"📚",name:"Básico Estudo e Edição",tag:"Faculdade, programação, edição leve",desc:"Mais RAM e armazenamento para muitas abas, programas pesados e edição de fotos e vídeos simples.",
+  up:["32GB já instalados, dá para ir a 64GB","Espaço para mais SSDs NVMe","Pode ganhar placa de vídeo depois"],
+  parts:["AMD Ryzen 5 7600","Placa-mãe B650M","Memória DDR5 32GB 6000MHz (2x16GB)","SSD NVMe 1TB Kingston NV2","Fonte 650W 80 Plus Bronze","Gabinete Airflow Mid Tower","Cooler Air 120mm"]},
+ {lv:"basico",icon:"🕹️",name:"Básico Jogos Leves",tag:"Jogos simples e e-sports em Full HD",desc:"A porta de entrada para jogar: roda e-sports e jogos leves sem gastar muito.",
+  up:["Troque a GPU quando quiser mais desempenho","Processador pode subir para Ryzen 7","Fonte 650W suporta GPUs intermediárias"],
+  parts:["AMD Ryzen 5 7600","Placa-mãe B650M","Memória DDR5 16GB 5600MHz","AMD Radeon RX 6600 8GB","SSD NVMe 500GB WD Blue SN570","Fonte 650W 80 Plus Bronze","Gabinete Gamer Mid Tower"]},
+ {lv:"medio",icon:"🎮",name:"Intermediário Full HD",tag:"Jogos em Full HD, edição leve",desc:"Equilíbrio entre preço e desempenho. Roda a maioria dos jogos em 1080p com boa fluidez.",
+  up:["Troca de CPU até Ryzen 7 sem trocar a placa","Slot PCIe 5.0 para GPU mais forte","Fonte 750W Gold aguenta GPUs maiores"],
+  parts:["AMD Ryzen 7 7700","Placa-mãe B650M","Memória DDR5 32GB 6000MHz (2x16GB)","NVIDIA GeForce RTX 4060 8GB","SSD NVMe 1TB Kingston NV2","Fonte 750W 80 Plus Gold","Gabinete Airflow Mid Tower","Cooler Air 120mm"]},
+ {lv:"medio",icon:"💰",name:"Intermediário Custo-Benefício",tag:"Melhor preço por desempenho",desc:"Foco em gastar pouco e jogar bem em Full HD, deixando espaço para crescer.",
+  up:["Mais RAM e SSD quando precisar","CPU e GPU facilmente trocáveis","Fonte Gold pronta para uma GPU maior"],
+  parts:["AMD Ryzen 5 7600","Placa-mãe B650M","Memória DDR5 16GB 5600MHz","AMD Radeon RX 7600 8GB","SSD NVMe 1TB Kingston NV2","Fonte 750W 80 Plus Gold","Gabinete Gamer Mid Tower"]},
+ {lv:"medio",icon:"🎬",name:"Intermediário Criador",tag:"Edição de vídeo, 3D e jogos",desc:"Muita RAM e SSD grande para trabalhar com vídeo e projetos pesados, e ainda jogar bem.",
+  up:["RAM até 64GB+","SSD extra via slot M.2","GPU mais forte futuramente"],
+  parts:["AMD Ryzen 7 7700","Placa-mãe B650M","Memória DDR5 32GB 6000MHz (2x16GB)","NVIDIA GeForce RTX 4060 Ti 8GB","SSD NVMe 2TB PCIe 4.0","Fonte 750W 80 Plus Gold","Gabinete Airflow Mid Tower","Cooler Air 120mm"]},
+ {lv:"gamer",icon:"🔥",name:"Gamer 1440p",tag:"Jogos pesados em 1440p",desc:"Alto desempenho em 2K com taxas de quadros altas, sem exagerar no preço.",
+  up:["Placa ATX com WiFi e PCIe 5.0","Fonte 850W comporta GPU maior","CPU pode subir para X3D"],
+  parts:["AMD Ryzen 7 7700","Placa-mãe B650 Gamer WiFi","Memória DDR5 32GB 6000MHz (2x16GB)","NVIDIA GeForce RTX 4070 Super 12GB","SSD NVMe 1TB Kingston NV2","Fonte 850W 80 Plus Gold","Gabinete Airflow Mid Tower","Cooler Air 120mm"]},
+ {lv:"gamer",icon:"🚀",name:"Gamer Top",tag:"Jogos pesados, 1440p/4K, streaming",desc:"O que há de melhor para jogo: CPU com 3D V-Cache, GPU potente e armazenamento ultrarrápido.",
+  up:["Placa ATX com WiFi e PCIe 5.0","Fonte 850W ATX 3.0: sobra para a próxima GPU","Espaço para mais SSDs e refrigeração AIO"],
+  parts:["AMD Ryzen 7 7800X3D","Placa-mãe B650 Gamer WiFi","Memória DDR5 32GB 6000MHz (2x16GB)","NVIDIA GeForce RTX 4070 Super 12GB","SSD NVMe 2TB PCIe 4.0","Fonte 850W 80 Plus Gold","Gabinete Airflow Mid Tower","Water Cooler 240mm"]},
+ {lv:"gamer",icon:"👑",name:"Gamer Extremo 4K",tag:"4K, streaming e trabalho pesado",desc:"Sem concessões: CPU de 16 núcleos, GPU topo de linha e 64GB de RAM.",
+  up:["Fonte 1000W ATX 3.0 aguenta a próxima GPU","RAM até 128GB","Armazenamento extra via M.2 e SATA"],
+  parts:["AMD Ryzen 9 7950X3D","Placa-mãe B650 Gamer WiFi","Memória DDR5 64GB 6000MHz (2x32GB)","NVIDIA GeForce RTX 4080 Super 16GB","SSD NVMe 2TB PCIe 4.0","Fonte 1000W 80 Plus Gold","Gabinete Airflow Mid Tower","Water Cooler 360mm"]}
+];
+let tf="todos";
+/* ========= O que cada peça faz ========= */
+const PARTS={
+ "Processador":{i:"🧠",r:"O cérebro do PC",t:"Faz todos os cálculos e executa os programas. Quanto mais núcleos e mais veloz, mais coisas ele faz ao mesmo tempo."},
+ "Placa de vídeo":{i:"🎨",r:"Desenha as imagens",t:"Cria os gráficos dos jogos e vídeos. É a peça mais importante para jogar. Sem ela, o PC usa o vídeo básico do processador."},
+ "Placa-mãe":{i:"🔌",r:"A base que liga tudo",t:"Todas as peças se encaixam nela. Ela decide quais processadores e memórias você pode usar e o quanto dá para atualizar depois."},
+ "Memória RAM":{i:"⚡",r:"A mesa de trabalho",t:"Guarda o que está aberto agora. Mais RAM = mais abas e programas sem travar. 16GB é o mínimo hoje; 32GB para jogos e edição."},
+ "SSD/HD":{i:"💾",r:"O armazém de arquivos",t:"Guarda o Windows, jogos e fotos. O SSD é muito mais rápido que o HD: o PC liga e abre jogos em segundos."},
+ "Fonte":{i:"🔋",r:"A energia do PC",t:"Converte a energia da tomada para as peças. Fonte ruim pode queimar o PC, então não economize aqui."},
+ "Gabinete":{i:"📦",r:"A caixa do PC",t:"Protege as peças e controla o fluxo de ar. Boa ventilação deixa o PC mais frio e silencioso."},
+ "Cooler":{i:"❄️",r:"Ventilador do processador",t:"Tira o calor do processador. Se esquentar demais, o PC fica lento ou desliga sozinho."}
+};
+const info=c=>PARTS[c]||{i:"🧩",r:"Componente do PC",t:"Peça complementar da montagem."};
+
+function renderGuide(){
+  $("#guide").innerHTML=Object.entries(PARTS).map(([c,p])=>`<div class="card gd"><div class="gi">${p.i}</div><div><b>${c}</b><div class="gr">${p.r}</div><div class="spec">${p.t}</div></div></div>`).join("");
+}
+
+/* ========= Tutorial animado (tipo vídeo) ========= */
+const SLIDES=[
+ ["👋","Bem-vindo!","Montar um computador é como montar um LEGO: cada peça tem uma função. Este site mostra os preços e explica tudo em português simples."],
+ ["🧩","Entenda as peças","Pense no PC como um corpo: o processador é o cérebro, a RAM é a mesa de trabalho, o SSD é o armário e a fonte é o coração que dá energia."],
+ ["🎯","Escolha um perfil","Não sabe por onde começar? Use as montagens prontas: Básico (estudo e trabalho), Médio (jogos em Full HD) ou Gamer Top (jogos pesados)."],
+ ["🔎","Pesquise pelo nome","Digite o nome da peça, até abreviado como “rtx 4060”, e veja o preço em várias lojas, com links reais das lojas, disponibilidade e o mais barato."],
+ ["🛒","Monte e some","Clique em “Adicionar à montagem” e acompanhe o total real ao lado. Você pode remover peças e salvar a lista."],
+ ["🔧","Pensando no futuro","Compre uma boa fonte e uma placa-mãe moderna. Assim você troca o processador ou a placa de vídeo depois, sem refazer o PC inteiro."],
+ ["✅","Pronto!","Confira os preços finais na loja antes de comprar. Boa montagem!"]
+];
+let tIdx=0,tTimer=null,tPlay=true;
+const TS=7000;
+function tShow(i){
+  tIdx=(i+SLIDES.length)%SLIDES.length;const [e,t,d]=SLIDES[tIdx];
+  $("#tslide").innerHTML=`<div class="te">${e}</div><h3>${t}</h3><p>${d}</p>`;
+  $("#tcount").textContent=(tIdx+1)+" / "+SLIDES.length;
+  const bar=$("#tbar");bar.style.transition="none";bar.style.width="0";
+  if(tPlay){void bar.offsetWidth;bar.style.transition="width "+TS+"ms linear";bar.style.width="100%"}
+  clearTimeout(tTimer);
+  if(tPlay)tTimer=setTimeout(()=>{tIdx<SLIDES.length-1?tShow(tIdx+1):(tPlay=false,$("#tpp").textContent="▶")},TS);
+}
+function tOpen(){
+  $("#tour").classList.add("on");
+  if(VIDEO_URL){$("#tslide").innerHTML=`<iframe src="${esc(VIDEO_URL)}" allowfullscreen></iframe>`;$("#tctl").style.display="none";return}
+  tPlay=true;$("#tpp").textContent="⏸";tShow(0);
+}
+function tClose(){$("#tour").classList.remove("on");clearTimeout(tTimer);if(VIDEO_URL)$("#tslide").innerHTML=""}
+
+
+const $=s=>document.querySelector(s);
+const R=n=>"R$ "+Number(n).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const nk=s=>String(s).toLowerCase().normalize("NFD").replace(/[^a-z0-9]/g,"");
+/* Reputação geral das lojas: referência editorial (não é dado em tempo real). */
+const REL={"Kabum":[5,"Especializada em hardware"],"Pichau":[5,"Especializada em hardware"],"Terabyte":[5,"Especializada em hardware"],"Terabyteshop":[5,"Especializada em hardware"],"Amazon":[4,"Prefira “vendido e entregue pela Amazon”"],"Amazon.com.br":[4,"Prefira “vendido e entregue pela Amazon”"],"Mercado Livre":[3,"Depende do vendedor"]};
+let build=[],cp=[],last=null,busy=false;
+try{build=JSON.parse(localStorage.getItem("pcl_build")||"[]")}catch(e){}
+const save=()=>{try{localStorage.setItem("pcl_build",JSON.stringify(build))}catch(e){}};
+const dt=i=>new Date(i).toLocaleString("pt-BR");
+const ok=o=>o.availability!=="indisponivel";
+const bestOf=p=>{const l=(p.offers||[]).filter(ok);return l.length?l.reduce((a,b)=>b.price<a.price?b:a):null};
+const AV={disponivel:["Disponível","ok"],indisponivel:["Indisponível","warn"],desconhecida:["Não informado","mut"]};
+async function api(u){let r,j=null;
+  try{r=await fetch(u)}catch(e){throw new Error("Não consegui falar com o servidor. Abra o site pelo endereço do servidor (não pelo arquivo no celular).")}
+  try{j=await r.json()}catch(e){}
+  if(!r.ok)throw new Error((j&&j.message)||"Erro "+r.status);return j}
+async function health(){const b=$("#banner");
+  try{const h=await api("/api/health"),n=(h.providers.serpapi?1:0)+(h.providers.mercadolivre?1:0);
+    b.className="banner "+(n?"okb":"warnb");
+    b.textContent=n?"Fontes ativas: "+[h.providers.serpapi&&"Google Shopping (SerpApi)",h.providers.mercadolivre&&"Mercado Livre"].filter(Boolean).join(" + ")+". Os resultados mostram a data e hora da consulta.":"Nenhuma fonte de preços configurada no servidor, então não há preços para mostrar. Veja o LEIA-ME.";
+  }catch(e){b.className="banner warnb";b.textContent=e.message}}
+
+function offerRow(o,min){const a=AV[o.availability]||AV.desconhecida;
+  const lk=o.url?`<a class="lk" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">${o.urlType==="google"?"Google Shopping":"Ver na loja"} ↗</a>`:`<span class="pend">sem link direto</span>`;
+  const sub=[o.condition&&o.condition!=="novo"?o.condition:"",o.note||"",o.urlType==="redirect"?"abre via Google":""].filter(Boolean).join(" · ");
+  return `<tr><td>${esc(o.store)}<small class="rl">${esc(sub)}</small></td><td class="av-${a[1]}">${a[0]}</td><td class="${o.price===min?"best":""}">${R(o.price)}</td><td>${lk}</td></tr>`}
+function renderResult(d){last=d;
+  const st=d.providers.map(p=>`<span class="chip ${p.ok?"":"bad"}">${esc(p.name)}: ${p.ok?p.count+" produto(s)":esc(p.error)}</span>`).join("");
+  const ps=d.products.slice(0,6);
+  $("#res").innerHTML=`<div class="meta">Consulta em <b>${dt(d.fetchedAt)}</b> ${d.cached?"(cache de "+Math.max(1,Math.round(d.cacheAgeSec/60))+" min)":"(consulta nova)"}${d.aiNormalized?" · buscado como “"+esc(d.searchedAs)+"”":""} <button class="btn sec" id="rf">↻ Atualizar preços</button></div><div class="chips">${st}</div>`+
+  (ps.length?ps.map((p,i)=>{const o=p.offers,m=Math.min(...o.filter(ok).map(x=>x.price),Infinity);
+    return `<div class="prod"><div class="part"><div><span class="tag">${esc(p.category||"Peça")}</span> ${p.brand?`<span class="tag t2">${esc(p.brand)}</span>`:""}<div class="pn">${esc(p.title)}</div><div class="spec">${esc([...(p.modelHints||[]),...(p.specs||[])].join(" · ")||"Especificações não identificadas no título")}</div></div>
+    <div class="avg"><b>${isFinite(m)?R(m):"—"}</b><span>menor preço · ${o.length} oferta(s)${p.detail?"":" · lista resumida"}</span></div></div>
+    <table><tr><th>Loja</th><th>Disponib.</th><th>Preço</th><th></th></tr>${o.map(x=>offerRow(x,m)).join("")}</table>
+    <div style="margin-top:10px"><button class="btn add" data-i="${i}" style="padding:8px 16px">+ Adicionar à montagem</button></div></div>`}).join(""):'<div class="err" style="margin-top:12px">Nenhum resultado real encontrado para esta busca.</div>');
+  $("#rf").onclick=()=>doSearch(d.query,true);
+  $("#res").querySelectorAll(".add").forEach(b=>b.onclick=()=>{const p=ps[+b.dataset.i];
+    build.push({query:p.title,title:p.title,category:p.category||"Outro",specs:(p.specs||[]).join(" · "),hints:(p.modelHints||[]).join(" "),offers:p.offers,fetchedAt:d.fetchedAt});save();render();b.textContent="✓ Adicionada"})}
+async function doSearch(q,refresh){q=(q||$("#q").value).trim();if(q.length<2)return;
+  const b=$("#go");b.disabled=true;b.textContent="Pesquisando…";
+  $("#res").innerHTML='<div class="sk" style="width:60%"></div><div class="sk"></div><div class="sk" style="width:80%"></div>';
+  try{renderResult(await api(`/api/search?q=${encodeURIComponent(q)}${refresh?"&refresh=1":""}`))}
+  catch(e){$("#res").innerHTML=`<div class="err">${esc(e.message)}</div>`}
+  b.disabled=false;b.textContent="Pesquisar"}
+
+async function fetchItems(refresh){if(busy)return;busy=true;
+  const todo=build.filter(i=>refresh||!i.offers);
+  for(let k=0;k<todo.length;k++){const it=todo[k];$("#prog").textContent=`Buscando preços reais… ${k+1}/${todo.length}: ${it.query||it.title}`;
+    try{const d=await api(`/api/search?detail=1&q=${encodeURIComponent(it.query||it.title)}${refresh?"&refresh=1":""}`),p=d.products.find(x=>x.offers.length);
+      if(p){it.offers=p.offers;it.title=p.title;it.specs=(p.specs||[]).join(" · ")||it.specs;it.hints=(p.modelHints||[]).join(" ");it.fetchedAt=d.fetchedAt;it.noResult=false}else{it.offers=[];it.noResult=true}
+    }catch(e){$("#prog").innerHTML=`<span class="err">${esc(e.message)}</span>`;busy=false;save();render();return}
+    save();render()}
+  $("#prog").textContent=todo.length?"Última consulta: "+dt(new Date().toISOString())+". Confira se cada produto encontrado é o que você quer.":"";busy=false}
+
+function render(){const l=$("#list");
+  l.innerHTML=build.length?build.map((p,i)=>{const b=bestOf(p);
+    return `<div class="item"><div><b>${esc(p.title)}</b><small>${info(p.category).i} ${esc(p.category)}${b?` · ${esc(b.store)} · ${p.fetchedAt?dt(p.fetchedAt):""}`:""}</small>${b&&b.url?`<a href="${esc(b.url)}" target="_blank" rel="noopener noreferrer">Ver na loja ↗</a>`:""}</div><div>${b?`<b>${R(b.price)}</b>`:`<span class="pend">${p.noResult?"sem resultado":p.offers?"indisponível":"preço pendente"}</span>`}<button class="x" data-i="${i}" title="Remover">×</button></div></div>`}).join(""):'<div class="empty">Nenhuma peça adicionada ainda.</div>';
+  const priced=build.filter(bestOf);$("#tot").textContent=R(priced.reduce((a,p)=>a+bestOf(p).price,0));
+  $("#pend").textContent=build.length&&priced.length<build.length?`${build.length-priced.length} peça(s) sem preço: o total está incompleto.`:"";
+  l.querySelectorAll(".x").forEach(b=>b.onclick=()=>{build.splice(+b.dataset.i,1);save();render()});
+  renderWhere();renderSpecs()}
+
+function renderWhere(){const w=$("#where"),its=build.filter(i=>i.offers&&i.offers.some(ok));
+  if(!its.length){w.innerHTML="";return}
+  const map=new Map();
+  its.forEach((it,ix)=>it.offers.filter(ok).forEach(o=>{const k=nk(o.store);let e=map.get(k);if(!e){e={name:o.store,items:{}};map.set(k,e)}if(!e.items[ix]||o.price<e.items[ix].price)e.items[ix]=o}));
+  const rows=[...map.values()].map(e=>{const n=Object.keys(e.items).length;let t=Object.values(e.items).reduce((a,o)=>a+o.price,0);
+    cp.filter(c=>nk(c.store)===nk(e.name)).forEach(c=>{t=c.type==="pct"?t*(1-c.v/100):t-c.v});return{...e,n,t:Math.max(0,t)}});
+  const full=rows.filter(r=>r.n===its.length).sort((a,b)=>a.t-b.t),part=rows.filter(r=>r.n<its.length).sort((a,b)=>b.n-a.n||a.t-b.t).slice(0,4);
+  const mix=its.reduce((a,it)=>a+bestOf(it).price,0),rl=r=>REL[r.name];
+  const safe=full.find(r=>rl(r)&&rl(r)[0]>=4)||full[0];
+  let h='<h2 style="margin-top:18px">Onde comprar mais barato</h2>';
+  if(full.length)h+=`<div class="pick"><b>✅ ${esc(safe.name)}: ${R(safe.t)}</b> (todas as ${its.length} peças nesta loja)${full[0]!==safe?`<br><small class="hi">A mais barata é ${esc(full[0].name)} (${R(full[0].t)}); ${rl(full[0])?esc(rl(full[0])[1].toLowerCase()):"reputação não avaliada, confira o vendedor"}.</small>`:""}${!rl(safe)?"<br><small>Reputação desta loja não avaliada aqui: confira o Reclame Aqui.</small>":""}</div>`;
+  else h+='<div class="what">Nenhuma loja tem todas as peças da lista nos resultados encontrados.</div>';
+  h+=`<div class="hint">Comprando cada peça na loja mais barata: <b>${R(mix)}</b> (pode envolver várias lojas e fretes).</div>`;
+  const tr=r=>`<tr><td>${esc(r.name)}<small class="rl">${rl(r)?"★".repeat(rl(r)[0])+" "+esc(rl(r)[1]):"reputação não avaliada"}</small></td><td>${r.n}/${its.length}</td><td class="${r===full[0]?"best":""}">${R(r.t)}</td></tr>`;
+  h+=`<table><tr><th>Loja</th><th>Peças</th><th>Total</th></tr>${full.map(tr).join("")}${part.map(tr).join("")}</table>`;
+  h+=`<h2 style="margin-top:16px">Cupom de desconto</h2><div class="cpf"><select id="cps">${rows.map(r=>`<option>${esc(r.name)}</option>`).join("")}</select><input type="text" id="cpc" placeholder="Código"><select id="cpt"><option value="pct">%</option><option value="val">R$</option></select><input type="number" id="cpv" placeholder="Valor" min="0"><button class="btn sec" id="cpa">Aplicar</button></div>`+
+  cp.map((c,i)=>`<div class="cpi"><span>🎟️ ${esc(c.store)} · ${esc(c.code||"cupom")} (−${c.type==="pct"?c.v+"%":R(c.v)})</span><button class="x" data-c="${i}">×</button></div>`).join("")+
+  `<div class="hint">Cupons mudam e expiram: digite aqui um código válido que você encontrou. <a href="https://www.google.com/search?q=${encodeURIComponent("cupom desconto "+safe.name+" hoje")}" target="_blank" rel="noopener noreferrer">Buscar cupons da ${esc(safe.name)}</a></div>`;
+  w.innerHTML=h;
+  $("#cpa").onclick=()=>{const v=parseFloat($("#cpv").value);if(!(v>0))return;cp.push({store:$("#cps").value,code:$("#cpc").value.trim(),type:$("#cpt").value,v});renderWhere()};
+  w.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>{cp.splice(+b.dataset.c,1);renderWhere()})}
+
+const GPU_W=[["4080",320],["4070 Super",220],["4060 Ti",160],["4060",115],["RX 7800",263],["RX 7600",165],["RX 6600",132]];
+function watts(p){const n=p.title||"";switch(p.category){
+ case"Processador":return/7950X3D/.test(n)?170:/7800X3D/.test(n)?120:/Ryzen 7/.test(n)?90:/Ryzen 5/.test(n)?65:95;
+ case"Placa de vídeo":return(GPU_W.find(g=>n.includes(g[0]))||[0,150])[1];
+ case"Placa-mãe":return 45;case"Memória RAM":return 10;case"SSD/HD":return 8;case"Cooler":return 10;case"Gabinete":return 15;default:return 0}}
+function renderSpecs(){const b=$("#specbody");
+  if(!build.length){b.innerHTML='<div class="empty">Adicione peças ou escolha uma montagem pronta para ver as especificações aqui.</div>';return}
+  const priced=build.filter(bestOf),tot=priced.reduce((a,i)=>a+bestOf(i).price,0),w=build.reduce((a,p)=>a+watts(p),0),rec=Math.ceil(w*1.5/50)*50;
+  const has=c=>build.find(p=>p.category===c),txt=p=>p?(p.title+" "+(p.specs||"")+" "+(p.hints||"")):"";
+  const fonte=has("Fonte"),fw=fonte&&+((fonte.title.match(/(\d+)\s?W/i)||[])[1]),ck=[];
+  const falta=["Processador","Placa-mãe","Memória RAM","SSD/HD","Fonte","Gabinete"].filter(c=>!has(c));
+  if(falta.length)ck.push(["warn","Faltam peças essenciais: "+falta.join(", ")+"."]);
+  const cpu=txt(has("Processador")),mb=txt(has("Placa-mãe")),ram=txt(has("Memória RAM"));
+  const sk=t=>(t.match(/AM5|AM4|LGA ?1700/i)||[])[0],dd=t=>(t.match(/DDR[45]/i)||[])[0];
+  if(sk(cpu)&&sk(mb))ck.push(sk(cpu)===sk(mb)?["ok","Processador e placa-mãe compatíveis ("+sk(cpu)+")."]:["warn","Processador ("+sk(cpu)+") e placa-mãe ("+sk(mb)+") NÃO são compatíveis."]);
+  if(dd(ram)&&dd(mb))ck.push(dd(ram)===dd(mb)?["ok","Memória e placa-mãe compatíveis ("+dd(ram)+")."]:["warn","Memória ("+dd(ram)+") e placa-mãe ("+dd(mb)+") NÃO são compatíveis."]);
+  if(fw)ck.push(fw>=rec?["ok","Fonte de "+fw+"W é suficiente (recomendado: "+rec+"W ou mais)."]:["warn","Fonte de "+fw+"W pode ser fraca. Recomendado: "+rec+"W ou mais."]);
+  if(!has("Placa de vídeo")&&has("Processador"))ck.push(["ok","Sem placa de vídeo: usa o vídeo integrado do processador (se o modelo tiver)."]);
+  ck.push(["ok","Conferência automática pelo texto dos anúncios e estimativa de consumo: confirme na ficha técnica do fabricante."]);
+  b.innerHTML=`<div class="sum"><div><span>Total (menor preço)</span><b>${R(tot)}</b></div><div><span>Peças</span><b>${build.length}</b></div><div><span>Consumo estimado</span><b>~${w}W</b></div><div><span>Fonte recomendada</span><b>${rec}W+</b></div></div>
+  <div class="tw"><table class="st"><tr><th>Peça</th><th>Modelo</th><th>Especificações</th><th>Menor preço</th></tr>${build.map(p=>`<tr><td>${info(p.category).i} ${esc(p.category)}</td><td><b>${esc(p.title)}</b></td><td>${esc(p.specs||"—")}</td><td>${bestOf(p)?R(bestOf(p).price):"—"}</td></tr>`).join("")}</table></div>
+  <div class="ck">${ck.map(c=>`<div class="${c[0]}">${c[0]==="ok"?"✅":"⚠️"} ${esc(c[1])}</div>`).join("")}</div>`}
+
+function tierParts(t){return t.parts.map(n=>CATALOG.find(p=>p[0]===n)).filter(Boolean).map(p=>({query:p[0],title:p[0],category:p[1],specs:p[2],offers:null}))}
+function renderTiers(){
+  $("#tiers").innerHTML=TIERS.map((t,i)=>{if(tf!=="todos"&&t.lv!==tf)return"";const ps=tierParts(t);
+    return `<article class="card tier"><div class="tier-h"><span class="ti">${t.icon}</span><div><div class="pn">${t.name}</div><div class="spec">${t.tag}</div></div></div><p class="spec">${t.desc}</p>
+    <ul class="pl">${ps.map(p=>`<li><span><small>${info(p.category).i} ${esc(p.category)} · ${info(p.category).r}</small>${esc(p.title)}</span></li>`).join("")}</ul>
+    <div class="up"><b>Pronto para upgrades</b><ul>${t.up.map(u=>`<li>${esc(u)}</li>`).join("")}</ul></div>
+    <div class="tier-f"><span class="sub">${ps.length} peças</span><button class="btn" data-t="${i}" style="padding:10px 14px">Usar esta montagem</button></div></article>`}).join("");
+  document.querySelectorAll("#tabs button").forEach(b=>{b.classList.toggle("on",b.dataset.l===tf);b.onclick=()=>{tf=b.dataset.l;renderTiers()}});
+  $("#tiers").querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{build=tierParts(TIERS[+b.dataset.t]);save();render();
+    $("#prog").textContent="Lista carregada. Toque em “Buscar preços” para consultar os preços reais (cada peça faz uma consulta nas fontes).";$("#list").scrollIntoView({behavior:"smooth",block:"center"})})}
+
+["ASUS TUF Gaming B550M-PLUS","RTX 4060","Ryzen 5 5600","SSD NVMe 1TB","Fonte 650W 80 Plus"].forEach(t=>{const c=document.createElement("span");c.className="chip";c.style.cursor="pointer";c.textContent=t;c.onclick=()=>{$("#q").value=t;doSearch(t)};$("#res").before(c)});
+$("#theme").onclick=()=>{const r=document.documentElement;r.setAttribute("data-theme",r.getAttribute("data-theme")==="dark"?"light":"dark")};
+if(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)document.documentElement.setAttribute("data-theme","dark");
+$("#go").onclick=()=>doSearch();$("#q").addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()});
+$("#fetch").onclick=()=>fetchItems(false);$("#refreshall").onclick=()=>fetchItems(true);
+$("#clr").onclick=()=>{build=[];save();render()};
+$("#tutor").onclick=tOpen;$("#tx").onclick=tClose;$("#tour").onclick=e=>{if(e.target.id==="tour")tClose()};
+$("#tprev").onclick=()=>tShow(tIdx-1);$("#tnext").onclick=()=>tShow(tIdx+1);
+$("#tpp").onclick=()=>{if(tPlay){tPlay=false;clearTimeout(tTimer);const w=getComputedStyle($("#tbar")).width;$("#tbar").style.transition="none";$("#tbar").style.width=w;$("#tpp").textContent="▶"}else{tPlay=true;$("#tpp").textContent="⏸";tShow(tIdx)}};
+document.addEventListener("keydown",e=>{if(e.key==="Escape")tClose()});
+health();render();renderTiers();renderGuide();
+
+</script></body></html>
